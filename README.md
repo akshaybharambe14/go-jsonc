@@ -1,6 +1,6 @@
 # JSON with comments for GO
 
-- Decodes a "commented json" to "json". Provided, yhe input must be a valid jsonc document.
+- Decodes a "commented json" to "json". Provided, the input must be a valid jsonc document.
 - Supports io.Reader
 
 Inspired by [muhammadmuzzammil1998](https://github.com/muhammadmuzzammil1998/jsonc)
