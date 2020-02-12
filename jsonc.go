@@ -3,6 +3,8 @@ package jsonc
 import (
 	"errors"
 	"io"
+	"reflect"
+	"unsafe"
 )
 
 type (
@@ -41,10 +43,10 @@ const (
 )
 
 var (
-	ErrUnexpectedEndOfJSON = errors.New("unexpected end of json")
+	ErrUnexpectedEndOfComment = errors.New("unexpected end of comment")
 )
 
-// New a new io.Reader wrapping the provided one.
+// NewDecoder returns a new Decoder wrapping the provided io.Reader. The returned decoder implements io.Reader.
 func NewDecoder(r io.Reader) *Decoder {
 	return &Decoder{
 		c: comment{},
@@ -52,31 +54,31 @@ func NewDecoder(r io.Reader) *Decoder {
 	}
 }
 
-// Read reads from underlying writer and processes the stream to omit comments.
+// Read reads from underlying reader and processes the stream to omit comments.
 // A single read doesn't guaranttee a valid JSON. Depends on length of passed slice.
 //
-// Produces ErrUnexpectedEndOfJSON for incomplete comments
+// Produces ErrUnexpectedEndOfComment for incomplete comments.
 func (d *Decoder) Read(p []byte) (int, error) {
 
 	n, err := d.r.Read(p)
 	if err != nil {
-		return n, err
+		return 0, err
 	}
 
 	shortRead := n <= len(p)
-	n = d.decode(p[:n])
+	n = decode(p[:n], &d.c)
 
-	if shortRead && d.c.state != stopped {
-		return 0, ErrUnexpectedEndOfJSON
+	if shortRead && !d.c.complete() {
+		return 0, ErrUnexpectedEndOfComment
 	}
 
 	return n, nil
 }
 
-func (d *Decoder) decode(p []byte) int {
+func decode(p []byte, c *comment) int {
 	i := 0
 	for _, s := range p {
-		if d.c.handle(s) {
+		if c.handle(s) {
 			p[i] = s
 			i++
 		}
@@ -124,17 +126,66 @@ func (c *comment) handle(s byte) bool {
 		}
 
 		if s == newLine && !c.multiLn {
-			c.state = stopped
+			c.reset()
 		}
 
 	case canStop:
 
 		if s == fwdSlash || s == charN {
-			c.state = stopped
-			c.multiLn = false
+			c.reset()
 		}
 
 	}
 
 	return false
+}
+
+func (c *comment) reset() {
+	c.state = stopped
+	c.multiLn = false
+}
+
+func (c *comment) complete() bool {
+	return c.state == stopped
+}
+
+// DecodeBytes decodes passed commented json byte slice to normal json.
+// It modifies the passed slice. The passed slice must be refferred till returned count, if there is no error.
+//
+// The error doesn't include errors related to invalid json. If not nil, it must be ErrUnexpectedEndOfComment.
+//
+// The returned json must be checked for validity.
+func DecodeBytes(p []byte) (int, error) {
+	c := &comment{}
+	n := decode(p, c)
+
+	if !c.complete() {
+		return 0, ErrUnexpectedEndOfComment
+	}
+
+	return n, nil
+}
+
+// DecodeString decodes passed commented json to normal json.
+// It uses "unsafe" way to convert a byte slice to result string. This saves allocations and improves performance is case of large json.
+//
+// The error doesn't include errors related to invalid json. If not nil, it must be ErrUnexpectedEndOfComment.
+//
+// The returned json must be checked for validity.
+func DecodeString(s string) (string, error) {
+	p := []byte(s)
+
+	n, err := DecodeBytes(p)
+	if err != nil {
+		return "", err
+	}
+
+	p = p[:n]
+
+	// following operation is safe to do till p is not being changed. This reduces allocations.
+	sh := *(*reflect.SliceHeader)(unsafe.Pointer(&p))
+	return *(*string)(unsafe.Pointer(&reflect.StringHeader{
+		Data: sh.Data,
+		Len:  sh.Len,
+	})), nil
 }

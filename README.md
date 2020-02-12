@@ -31,6 +31,10 @@ Gets converted to (spaces omitted)
 { "string": "foo", "bool": false, "number": 42, "array": [1, 2, 3] }
 ```
 
+## Motivation
+
+[jsonc](https://github.com/muhammadmuzzammil1998/jsonc) is great. But this package provides significant performance improvements and simple API to use it with standard library.
+
 ## Usage
 
 Get this package
@@ -43,8 +47,8 @@ go get github.com/akshaybharambe14/go-jsonc
 
 ## Example
 
-see [examples](https://github.com/akshaybharambe14/go-jsonc/examples)
+see [examples](https://github.com/akshaybharambe14/go-jsonc/tree/master/examples)
 
 ## License
 
-`go-jsonc` is available under [MIT License](License.md)
+`go-jsonc` is open source and available under [MIT License](License.md)
