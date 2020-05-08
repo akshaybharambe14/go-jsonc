@@ -1,0 +1,60 @@
+{
+    // your comments on field
+    "index": 0,
+    "guid": "137e71df-7148-4687-9fc6-31d6afcfa076",
+    "isActive": false,
+    "balance": "$3,925.49",
+    "picture": "http://placehold.it/32x32",
+    "age": 37,
+    "eyeColor": "blue",
+    "name": {
+        "first": "Shana",
+        "last": "Bryan"
+    },
+    "company": "ROTODYNE",
+    "email": "shana.bryan@rotodyne.me",
+    "phone": "+1 (802) 555-2618",
+    "address": "344 Empire Boulevard, Bradenville, Maine, 1578",
+    "about": "Qui incididunt duis est Lorem et incididunt. Occaecat labore qui enim consectetur cillum voluptate eu eiusmod ea cillum ea nostrud. Amet nulla eiusmod ad pariatur mollit sit cupidatat incididunt aliquip qui reprehenderit excepteur aliqua sit. Proident excepteur mollit esse pariatur est est cupidatat anim dolore labore. Voluptate ad aliqua ad ipsum ad officia minim mollit aliqua est. Lorem ad ex nisi in veniam laborum voluptate.",
+    "registered": "Tuesday, July 18, 2017 6:41 AM",
+    "latitude": "-67.027019",
+    "longitude": "172.011001",
+    "tags": [
+        "excepteur",
+        "ullamco",
+        "duis",
+        "laboris",
+        "sunt"
+    ],
+    "range": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+    ],
+    /* This is a block comment.
+	It can be multiline.
+	*/
+    "friends": [
+        {
+            "id": 0,
+            "name": "Elinor Bullock"
+        },
+        {
+            "id": 1,
+            "name": "Carson Roach"
+        },
+        {
+            "id": 2,
+            "name": "Rosalind Buchanan"
+        }
+    ],
+    "greeting": "Hello, Shana! You have 9 unread messages.",
+    "favoriteFruit": "strawberry"
+}
