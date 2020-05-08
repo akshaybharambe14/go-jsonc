@@ -41,14 +41,15 @@ const (
 
 const (
 	// byte representations of string literals
-	tab      = 9   // (	)
-	newLine  = 10  // (\n)
-	space    = 32  // ( )
-	quote    = 34  // ("")
-	star     = 42  // (*)
-	fwdSlash = 47  // (/)
-	bkdSlash = 92  // (\)
-	charN    = 110 // (n)
+	tab        = 9   // (	)
+	newLine    = 10  // (\n)
+	newLineFMT = 13  // (\n)
+	space      = 32  // ( )
+	quote      = 34  // ("")
+	star       = 42  // (*)
+	fwdSlash   = 47  // (/)
+	bkdSlash   = 92  // (\)
+	charN      = 110 // (n)
 )
 
 var (
@@ -82,7 +83,7 @@ func decode(p []byte, c *comment) int {
 			}
 
 			// TODO: formatting can be preserved by allowing space and tab in JSON
-			if s == space || s == tab || s == newLine {
+			if s == space || s == tab || s == newLine || s == newLineFMT {
 				continue
 			}
 
